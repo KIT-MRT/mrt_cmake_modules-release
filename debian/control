@@ -1,0 +1,12 @@
+Source: ros-melodic-mrt-cmake-modules
+Section: misc
+Priority: optional
+Maintainer: Piotr Orzechowski <piotr.orzechowski@kit.edu>
+Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-melodic-mrt-cmake-modules
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-catkin
+Description: CMake Functions and Modules for automating CMake
