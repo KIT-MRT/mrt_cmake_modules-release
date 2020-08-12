@@ -3,7 +3,7 @@
 Maintainer status: maintained
 - Maintainer: Johannes Beck <johannes.beck@kit.edu>, Fabian Poggenhans <fabian.poggenhans@kit.edu>
 - Author: Johannes Beck <johannes.beck@kit.edu>, Claudio Bandera claudio.bandera@kit.edu, Fabian Poggenhans <fabian.poggenhans@kit.edu>
-- License: GPL
+- License: BSD, some files MIT
 - Bug / feature tracker: https://gitlab.mrt.uni-karlsruhe.de/MRT/mrt_cmake_modules/issues
 - Source: git https://gitlab.mrt.uni-karlsruhe.de/MRT/mrt_cmake_modules.git (branch: master)
 
@@ -26,6 +26,7 @@ On the other hand, you get a lot of things for free:
 - Support for [sanitizers](#sanitizing-your-code)
 - Support for [running clang-tidy](#using-clang-tidy)
 - Automated install of your scripts/launchfiles/executables/libraries... to the correct location
+- experimental support for **ROS2** and Conan builds
 
 *) Actually MRT stands for *Institut für Mess- und Regelungstechnik*, the institute that develops this package.
 
@@ -93,7 +94,7 @@ It works out of the box with a *CMakeLists.txt* created with `generate_cmakelist
 │   └── params                            # Contains parameter files that will be installed
 │       ├── some_parameters.yaml
 │       └── some_python_parameters.yaml
-├── nodelet_plugins.xml                   # Should reference the nodelet library at lib/libnodename_nodelet
+├── nodelet_plugins.xml                   # Should reference the nodelet library at lib/lib<package_name>-<nodename>-nodelet
 ├── package.xml                           # The manifest. It should reference the nodelet_plugins.xml
 ├── README.md
 ├── scripts                               # Executable scripts that will be installed. These can be python nodes as well
