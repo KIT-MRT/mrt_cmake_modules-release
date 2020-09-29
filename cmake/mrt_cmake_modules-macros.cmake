@@ -608,12 +608,6 @@ function(mrt_add_python_api modulename)
 
     #set and check target name
     set(PYTHON_API_MODULE_NAME ${modulename})
-    if("${${PROJECT_NAME}_PYTHON_MODULE}" STREQUAL "${PYTHON_API_MODULE_NAME}")
-        message(
-            FATAL_ERROR
-                "The name of the python_api module conflicts with the name of the python module. Please choose a different name"
-        )
-    endif()
 
     if("${PYTHON_API_MODULE_NAME}" STREQUAL "${PROJECT_NAME}")
         # mark that catkin_python_setup() was called and the setup.py file contains a package with the same name as the current project
@@ -632,7 +626,7 @@ function(mrt_add_python_api modulename)
     if(NOT pybind11_FOUND AND NOT BoostPython_FOUND)
         message(
             FATAL_ERROR
-                "Missing dependency to pybind11 or boost python. Add either '<depend>pybind11-dev</depend>' or '<depend>libboost-python</depend>' to 'package.xml'"
+                "Missing dependency to pybind11 or boost python. Add either '<depend>pybind11-dev</depend>' or '<depend>libboost-python-dev</depend>' to 'package.xml'"
         )
     endif()
 
@@ -681,8 +675,6 @@ function(mrt_add_python_api modulename)
             safe_execute_process(COMMAND ${GENERATE_ENVIRONMENT_CACHE_COMMAND})
         endif()
     endif()
-
-    configure_file(${MCM_TEMPLATE_DIR}/__init__.py.in ${PYTHON_MODULE_DIR}/__init__.py)
 
     # append to list of all targets in this project
     set(${PROJECT_NAME}_PYTHON_API_TARGET
@@ -784,8 +776,10 @@ function(mrt_add_library libname)
             string(REPLACE "." ";" versions ${${PROJECT_NAME}_VERSION})
             list(GET versions 0 version_major)
             set_target_properties(
-                ${LIBRARY_TARGET_NAME} PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} SOVERSION ${version_major}
-                                                  VERSION ${${PROJECT_NAME}_VERSION})
+                ${LIBRARY_TARGET_NAME}
+                PROPERTIES OUTPUT_NAME ${LIBRARY_NAME}
+                           SOVERSION ${version_major}
+                           VERSION ${${PROJECT_NAME}_VERSION})
         endif()
         target_compile_options(${LIBRARY_TARGET_NAME} PRIVATE ${MRT_SANITIZER_CXX_FLAGS})
         if(MRT_ADD_LIBRARY_LIBRARIES)
@@ -1300,7 +1294,7 @@ function(mrt_add_nosetests folder)
         return()
     endif()
 
-    message(STATUS "Adding nosetests in folder ${TEST_FOLDER}")
+    message(STATUS "Adding nosetests in folder ${PROJECT_SOURCE_DIR}/${TEST_FOLDER}")
     _mrt_add_nosetests_impl(${TEST_FOLDER} DEPENDS ${ARG_DEPENDS} ${ARG_DEPENDENCIES})
 endfunction()
 
