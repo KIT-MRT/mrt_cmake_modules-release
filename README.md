@@ -1,3 +1,26 @@
+## mrt_cmake_modules (foxy) - 1.0.8-1
+
+The packages in the `mrt_cmake_modules` repository were released into the `foxy` distro by running `/usr/bin/bloom-release mrt_cmake_modules --rosdistro foxy` on `Wed, 30 Sep 2020 18:58:48 -0000`
+
+The `mrt_cmake_modules` package was released.
+
+Version of package(s) in repository `mrt_cmake_modules`:
+
+- upstream repository: https://github.com/KIT-MRT/mrt_cmake_modules.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `1.0.7-2`
+- new version: `1.0.8-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.8`
+- catkin_pkg version: `0.4.22`
+- rosdep version: `0.19.0`
+- rosdistro version: `0.8.2`
+- vcstools version: `0.1.42`
+
+
 ## mrt_cmake_modules (eloquent) - 1.0.8-1
 
 The packages in the `mrt_cmake_modules` repository were released into the `eloquent` distro by running `/usr/bin/bloom-release mrt_cmake_modules --rosdistro eloquent` on `Wed, 30 Sep 2020 18:54:08 -0000`
