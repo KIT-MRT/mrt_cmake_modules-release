@@ -1,3 +1,26 @@
+## mrt_cmake_modules (eloquent) - 1.0.7-1
+
+The packages in the `mrt_cmake_modules` repository were released into the `eloquent` distro by running `/usr/bin/bloom-release mrt_cmake_modules --rosdistro eloquent` on `Wed, 30 Sep 2020 14:02:24 -0000`
+
+The `mrt_cmake_modules` package was released.
+
+Version of package(s) in repository `mrt_cmake_modules`:
+
+- upstream repository: https://github.com/KIT-MRT/mrt_cmake_modules.git
+- release repository: https://github.com/KIT-MRT/mrt_cmake_modules-release.git
+- rosdistro version: `1.0.5-1`
+- old version: `1.0.5-1`
+- new version: `1.0.7-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.8`
+- catkin_pkg version: `0.4.22`
+- rosdep version: `0.19.0`
+- rosdistro version: `0.8.2`
+- vcstools version: `0.1.42`
+
+
 ## mrt_cmake_modules (eloquent) - 1.0.5-1
 
 The packages in the `mrt_cmake_modules` repository were released into the `eloquent` distro by running `/usr/bin/bloom-release mrt_cmake_modules --rosdistro eloquent` on `Tue, 29 Sep 2020 18:37:43 -0000`
