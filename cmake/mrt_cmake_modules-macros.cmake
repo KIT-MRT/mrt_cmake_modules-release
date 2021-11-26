@@ -21,25 +21,33 @@ if(DEFINED MRT_CLANG_TIDY_FLAGS)
 endif()
 unset(MRT_CLANG_TIDY_FLAGS)
 
+# Disable that all dependant packages are treated as "system" packages (suppressing all warnings from there).
+# We later add the "system" explicitly to all include dirs of parent workspaces.
+set(CMAKE_NO_SYSTEM_FROM_IMPORTED YES)
+
 # construct the mrt_sanitizer_lib_flags and  mrt_sanitizer_exe_flags target based on the configuation in the MRT_SANITIZER variable
 if(NOT TARGET ${PROJECT_NAME}_sanitizer_lib_flags AND NOT TARGET ${PROJECT_NAME}_sanitizer_exe_flags)
     add_library(${PROJECT_NAME}_sanitizer_lib_flags INTERFACE)
     add_library(${PROJECT_NAME}_sanitizer_exe_flags INTERFACE)
     set(gcc_cxx "$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER:$<CXX_COMPILER_VERSION>,6.3>>")
     if(MRT_SANITIZER STREQUAL "checks" OR MRT_SANITIZER STREQUAL "check_race")
+        # note: in no-recover mode, we still recover from nullptr issues. This mitigates problems with serialization libs
+        # (like boost::serialzation and cereal) that use this hack to force template instanciation.
         target_compile_options(
             ${PROJECT_NAME}_sanitizer_lib_flags
             INTERFACE
-                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:-fsanitize=undefined,bounds-strict,float-divide-by-zero,float-cast-overflow;-fsanitize-recover=alignment>
+                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:-fsanitize=undefined,bounds-strict,float-divide-by-zero,float-cast-overflow>
                 $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},check_race>>:-fsanitize=thread,undefined,bounds-strict,float-divide-by-zero,float-cast-overflow>
                 $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER_RECOVER},no_recover>>:-fno-sanitize-recover=undefined,bounds-strict,float-divide-by-zero,float-cast-overflow>
+                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:$<IF:$<STREQUAL:${MRT_SANITIZER_RECOVER},no_recover>,-fsanitize-recover=alignment$<COMMA>null,-fsanitize-recover=alignment>>
         )
         target_compile_options(
             ${PROJECT_NAME}_sanitizer_exe_flags
             INTERFACE
-                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:-fsanitize=address,leak,undefined,bounds-strict,float-divide-by-zero,float-cast-overflow;-fsanitize-recover=alignment>
+                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:-fsanitize=address,leak,undefined,bounds-strict,float-divide-by-zero,float-cast-overflow>
                 $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},check_race>>:-fsanitize=thread,undefined,float-divide-by-zero,float-cast-overflow>
                 $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER_RECOVER},no_recover>>:-fno-sanitize-recover=undefined,bounds-strict,float-divide-by-zero,float-cast-overflow>
+                $<$<AND:${gcc_cxx},$<STREQUAL:${MRT_SANITIZER},checks>>:$<IF:$<STREQUAL:${MRT_SANITIZER_RECOVER},no_recover>,-fsanitize-recover=alignment$<COMMA>null,-fsanitize-recover=alignment>>
         )
         target_link_options(
             ${PROJECT_NAME}_sanitizer_lib_flags
@@ -84,6 +92,16 @@ if(ROS_VERSION EQUAL 1)
     set(MRT_CMAKE_ENV sh ${CATKIN_ENV})
 elseif(ROS_VERSION EQUAL 2)
     find_package(ament_cmake_core REQUIRED)
+    if(NOT DEFINED PYTHON_EXECUTABLE)
+        # rolling uses FindPython3 instead of FindPythonInterp
+        if(NOT TARGET Python3::Interpreter)
+            find_package(Python3 REQUIRED COMPONENTS Interpreter)
+        endif()
+        get_executable_path(PYTHON_EXECUTABLE Python3::Interpreter CONFIGURE)
+        set(PYTHON_VERSION ${Python3_VERSION})
+        set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
+        set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
+    endif()
     if(NOT DEFINED BUILD_TESTING OR BUILD_TESTING)
         # our cmake template still relies on CATKIN_ENABLE_TESTING
         set(CATKIN_ENABLE_TESTING TRUE)
@@ -102,6 +120,32 @@ set(${PROJECT_NAME}_LOCAL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include;${CA
 set(${PROJECT_NAME}_PYTHON_API_TARGET "") # contains the list of python api targets
 set(${PROJECT_NAME}_GENERATED_LIBRARIES "") # the list of library targets built and installed by the tools
 set(${PROJECT_NAME}_MRT_TARGETS "") # list of all public installable targets created by the functions here
+
+# this function determines all includes directories that belong to parent workspaces (including the ros installation).
+# we later mark all of these directories as system directories so that warnings from these headers are hidden.
+# It is important to maintain the order of CMAKE_INSTALL_PREFIX so that the include order matches the order in which workspaces are overlayed.
+function(_get_parent_workspace_include_dirs outdir)
+    # Assuming the parent directory of the install dir is the workspace.
+    # Not the best assumption but it works (in the worst case we mark too much headers as "system")
+    get_filename_component(current_workspace ${CMAKE_INSTALL_PREFIX} DIRECTORY)
+
+    set(workspace_include_dirs)
+    foreach(workspace ${CMAKE_PREFIX_PATH})
+        string(FIND ${workspace} ${current_workspace} _is_current_workspace)
+        if(NOT ${_is_current_workspace} EQUAL -1)
+            continue()
+        endif()
+        foreach(_include_dir ${mrt_EXPORT_INCLUDE_DIRS})
+            string(FIND ${_include_dir} ${workspace} _pos)
+            if(NOT ${_pos} EQUAL -1)
+                list(APPEND workspace_include_dirs ${_include_dir})
+            endif()
+        endforeach()
+    endforeach()
+    set(${outdir}
+        ${workspace_include_dirs}
+        PARENT_SCOPE)
+endfunction()
 
 # define rosparam/rosinterface_handler macro for compability. Macros will be overriden by the actual macros defined by the packages, if existing.
 macro(generate_ros_parameter_files)
@@ -273,6 +317,11 @@ function(mrt_add_links target)
                 target_include_directories(${target} PUBLIC $<BUILD_INTERFACE:${include}>)
             endif()
         endforeach()
+        # mark all include include dirs from parent workspaces as "system" (silence warnings from these)
+        _get_parent_workspace_include_dirs(workspace_include_dirs)
+        if(workspace_include_dirs)
+            target_include_directories(${target} SYSTEM PRIVATE ${workspace_include_dirs})
+        endif()
     else()
         # set the include dir for installation and dependent targets.
         foreach(include ${${PROJECT_NAME}_LOCAL_INCLUDE_DIRS})
@@ -426,7 +475,7 @@ endmacro()
 macro(mrt_add_action_files folder_name)
     mrt_glob_files(_ROS_ACTION_FILES REL_FOLDER ${folder_name} ${folder_name}/*.action)
     if(_ROS_ACTION_FILES)
-        add_action_files(FILES ${_ROS_ACTION_FILES} DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/${folder_name}")
+        add_action_files(FILES ${_ROS_ACTION_FILES} DIRECTORY "${folder_name}")
         set(ROS_GENERATE_ACTION True)
     endif()
 endmacro()
@@ -1301,7 +1350,7 @@ endfunction()
 function(_mrt_install_python source_file destination)
     if(ROS_VERSION EQUAL 1)
         # we can just use catkin
-        catkin_install_python(PROGRAMS ${file} DESTINATION ${destination})
+        catkin_install_python(PROGRAMS ${source_file} DESTINATION ${destination})
         return()
     endif()
     # for ament, we have to fix the shebang before we can install (ament does not provide this feature)
