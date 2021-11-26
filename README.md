@@ -1,3 +1,26 @@
+## mrt_cmake_modules (galactic) - 1.0.9-1
+
+The packages in the `mrt_cmake_modules` repository were released into the `galactic` distro by running `/usr/bin/bloom-release --ros-distro galactic mrt_cmake_modules` on `Fri, 26 Nov 2021 18:38:44 -0000`
+
+The `mrt_cmake_modules` package was released.
+
+Version of package(s) in repository `mrt_cmake_modules`:
+
+- upstream repository: https://github.com/KIT-MRT/mrt_cmake_modules.git
+- release repository: https://github.com/KIT-MRT/mrt_cmake_modules-release.git
+- rosdistro version: `1.0.8-3`
+- old version: `1.0.8-3`
+- new version: `1.0.9-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.23`
+- rosdep version: `0.21.0`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## mrt_cmake_modules (foxy) - 1.0.9-1
 
 The packages in the `mrt_cmake_modules` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --ros-distro foxy mrt_cmake_modules` on `Fri, 26 Nov 2021 18:27:58 -0000`
