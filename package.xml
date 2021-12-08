@@ -1,12 +1,12 @@
 <package format="3">
   <name>mrt_cmake_modules</name>
-  <version>1.0.8</version>
+  <version>1.0.9</version>
   <description>CMake Functions and Modules for automating CMake</description>
 
   <license>BSD</license>
   <maintainer email="kevin.roesch@kit.edu">Kevin Rösch</maintainer>
-  <maintainer email="fabian.poggenhans@kit.edu">Fabian Poggenhans</maintainer>
-  <author email="fabian.poggenhans@kit.edu">Fabian Poggenhans</author>
+  <maintainer email="fabian.poggenhans@partner.kit.edu">Fabian Poggenhans</maintainer>
+  <author email="fabian.poggenhans@partner.kit.edu">Fabian Poggenhans</author>
   <author email="johannes.beck@kit.edu">Johannes Beck</author>
   <url type="repository">https://github.com/KIT-MRT/mrt_cmake_modules.git</url>
   <url type="website">http://wiki.ros.org/mrt_cmake_modules</url>
