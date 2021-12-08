@@ -1,0 +1,12 @@
+Source: ros-rolling-mrt-cmake-modules
+Section: misc
+Priority: optional
+Maintainer: Kevin Rösch <kevin.roesch@kit.edu>
+Build-Depends: debhelper (>= 9.0.0), python3-catkin-pkg-modules, python3-rospkg, python3-setuptools, python3-yaml, ros-rolling-ament-cmake-core, ros-rolling-ros-environment, ros-rolling-ros-workspace
+Homepage: http://wiki.ros.org/mrt_cmake_modules
+Standards-Version: 3.9.2
+
+Package: ros-rolling-mrt-cmake-modules
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, lcov, python3-catkin-pkg-modules, python3-rospkg, python3-setuptools, python3-yaml, ros-rolling-gtest-vendor, ros-rolling-ros-environment, ros-rolling-ros-workspace
+Description: CMake Functions and Modules for automating CMake
