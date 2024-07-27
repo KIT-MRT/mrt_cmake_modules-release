@@ -20,7 +20,7 @@ benchmark:
 boost:
   components: [wserialization thread random serialization log_setup prg_exec_monitor
       wave system chrono filesystem locale timer date_time regex graph program_options
-      unit_test_framework log atomic]
+      unit_test_framework log atomic iostreams]
   include_dirs: [Boost_INCLUDE_DIRS]
   libraries: [Boost_LIBRARIES]
   library_dirs: [Boost_LIBRARY_DIRS]
@@ -36,6 +36,7 @@ cgal:
   libraries: [CGAL_LIBRARIES]
   library_dirs: []
   name: CGAL
+  warning: Usage of cgal in package.xml is deprecated. Use 'mrt_cgal' instead!
 coinor-libipopt-dev:
   components: []
   include_dirs: [IPOPT_INCLUDE_DIRS]
@@ -48,6 +49,11 @@ cuda:
   libraries: [CUDA_LIBRARIES]
   library_dirs: []
   name: MrtCUDA
+curl:
+  components: []
+  include_dirs: [CURL_INCLUDE_DIRS]
+  libraries: [CURL_LIBRARIES]
+  name: CURL
 eigen:
   components: []
   include_dirs: [EIGEN3_INCLUDE_DIR]
@@ -55,10 +61,8 @@ eigen:
   library_dirs: []
   name: Eigen3
 flann:
-  include_dirs: [FLANN_INCLUDE_DIRS]
-  libraries: [FLANN_LIBRARIES]
-  library_dirs: []
-  name: Flann
+  targets: ["FLANN::FLANN"]
+  name: FLANN
 geographiclib:
   components: []
   include_dirs: [GeographicLib_INCLUDE_DIRS]
@@ -139,6 +143,12 @@ libjsoncpp-dev:
 liblapack-dev:
   name: LAPACK
   libraries: [LAPACK_LIBRARIES]
+libnlopt-cxx-dev:
+  components: []
+  include_dirs: [nlopt_INCLUDE_DIR]
+  libraries: [nlopt_LIBRARIES]
+  library_dirs: []
+  name: nlopt
 libnlopt-dev:
   components: []
   include_dirs: [nlopt_INCLUDE_DIR]
@@ -199,12 +209,22 @@ mrt_benchmark:
   name: benchmark
   targets: ['benchmark::benchmark']
   warning: Usage of mrt_benchmark in package.xml is deprecated. Use 'benchmark' instead!
+mrt_blasfeo:
+  name: blasfeo
+  include_dirs: [blasfeo_INCLUDE_DIR]
+  libraries: [blasfeo_LIBRARIES]
+  targets: ['blasfeo']
 mrt_c_tensorflow:
   components: []
   include_dirs: [TENSORFLOW_C_INCLUDE_DIRS]
   libraries: [TENSORFLOW_LIBRARIES]
   library_dirs: []
   name: CTensorflow
+mrt_casadi:
+  name: casadi
+  include_dirs: [casadi_INCLUDE_DIR]
+  libraries: [casadi_LIBRARIES]
+  targets: ['casadi']
 mrt_cereal:
   components: []
   include_dirs: [Cereal_INCLUDE_DIR]
@@ -222,13 +242,17 @@ mrt_cgal:
   libraries: [CGAL_LIBRARIES]
   library_dirs: []
   name: CGAL
-  warning: Usage of mrt_cgal in package.xml is deprecated. Use 'cgal' instead!
 mrt_ebus:
   components: []
   include_dirs: [ebus-sdk_INCLUDE_DIR]
   libraries: [ebus-sdk_LIBRARIES]
   library_dirs: []
   name: ebus-sdk
+mrt_hpipm:
+  name: hpipm
+  include_dirs: [hpipm_INCLUDE_DIR]
+  libraries: [hpipm_LIBRARIES]
+  targets: ['hpipm']
 mrt_metis:
   components: []
   include_dirs: [Metis_INCLUDE_DIR]
@@ -331,6 +355,15 @@ opengl:
   libraries: [OPENGL_LIBRARIES]
   library_dirs: []
   name: MrtOpenGL
+ortools:
+  name: ortools
+  targets: ['ortools::ortools']
+  include_dirs: [ortools_INCLUDE_DIR]
+  libraries: [ortools_LIBRARIES]
+pangolin:
+  include_dirs: [Pangolin_INCLUDE_DIRS]
+  libraries: [Pangolin_LIBRARIES]
+  name: Pangolin
 png++:
   components: []
   include_dirs: [PNG++_INCLUDE_DIRS]
@@ -338,6 +371,11 @@ png++:
   library_dirs: []
   name: PNG++
   warning: Usage of png++ in package.xml is deprecated. Use 'libpng++-dev' instead!
+proj:
+  name: MrtProj
+  include_dirs: [proj_INCLUDE_DIRS]
+  libraries: [proj_LIBRARIES]
+  library_dirs: [proj_LIBRARIY_DIRS]
 protobuf-dev:
   components: []
   include_dirs: [PROTOBUF_INCLUDE_DIR]
@@ -362,6 +400,11 @@ pybind11-dev:
   libraries: []
   library_dirs: []
   name: pybind11
+qtbase5-dev:
+  components: [Core Gui Network]
+  include_dirs: [QT_INCLUDES]
+  libraries: [QT_LIBRARIES]
+  name: MrtQt5
 range_v3:
   name: range-v3
   targets: [range-v3]
@@ -392,6 +435,31 @@ tinyxml2:
   libraries: [TinyXML2_LIBRARIES]
   library_dirs: []
   name: TinyXML2
+xerces:
+  components: []
+  include_dirs: [XercesC_INCLUDE_DIRS]
+  libraries: [XercesC_LIBRARIES]
+  name: XercesC
 yaml-cpp:
   name: yaml-cpp
   targets: [yaml-cpp]
+mrt-osqp:
+  name: osqp
+  include_dirs: [osqp_INCLUDE_DIR]
+  libraries: [osqp_LIBRARIES]
+  targets: ['osqp::osqp']
+mrt-osqp-eigen:
+  name: OsqpEigen
+  include_dirs: [osqp_eigen_INCLUDE-DIR]
+  libraries: [osqp_eigen_LIBRARIES]
+  targets: ['OsqpEigen::OsqpEigen']
+or-tools:
+  name: ortools
+  targets: [' ortools::ortools']
+zxing-cpp:
+  name: ZXing
+  targets: ['ZXing::Core']
+zeromq:
+  include_dirs: [ZMQ_INCLUDE_DIRS]
+  libraries: [ZMQ_LIBRARIES]
+  name: ZeroMQ
