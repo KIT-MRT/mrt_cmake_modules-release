@@ -1,3 +1,26 @@
+## mrt_cmake_modules (noetic) - 1.0.10-1
+
+The packages in the `mrt_cmake_modules` repository were released into the `noetic` distro by running `/home/fabian/.local/bin/bloom-release --rosdistro noetic mrt_cmake_modules` on `Sat, 27 Jul 2024 13:58:09 -0000`
+
+The `mrt_cmake_modules` package was released.
+
+Version of package(s) in repository `mrt_cmake_modules`:
+
+- upstream repository: https://github.com/KIT-MRT/mrt_cmake_modules.git
+- release repository: https://github.com/KIT-MRT/mrt_cmake_modules-release.git
+- rosdistro version: `1.0.4-1`
+- old version: `1.0.4-1`
+- new version: `1.0.10-1`
+
+Versions of tools used:
+
+- bloom version: `0.12.0`
+- catkin_pkg version: `0.4.23`
+- rosdep version: `0.24.0`
+- rosdistro version: `0.9.1`
+- vcstools version: `0.1.42`
+
+
 ## mrt_cmake_modules (rolling) - 1.0.9-1
 
 The packages in the `mrt_cmake_modules` repository were released into the `rolling` distro by running `/usr/bin/bloom-release --ros-distro rolling mrt_cmake_modules` on `Wed, 08 Dec 2021 12:57:46 -0000`
